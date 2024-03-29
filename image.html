@@ -1,0 +1,284 @@
+﻿
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-cn"><head>
+    <style>
+    body{margin: 2px;}
+	</style>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8; X-Wap-Proxy-Cookie=none">
+	<link rel="Shortcut Icon" href="https://gw.alicdn.com/imgextra/i3/O1CN01wXAetk1tWNBC7bwRR_!!6000000005909-2-tps-120-120.png"/>
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<title>旅舍小公举</title>
+	<script>
+	function $(obj,b){b=document.querySelector(obj);if(!b){b=document.createElement("noscript");b.nofind=1}return b;}
+	function Msg(d){
+		var t=$("#msg").value;
+		if(t.indexOf(d)==0) d=t+"！";
+		$("#msg").value=d;
+	}
+	function Bind(e){
+		var a,b,c,t;
+		if(e&&e.target){
+			e=e.target;
+			switch(e.id){
+				case "peticon":
+				case "pettxt":
+					e=e.parentElement;
+				case "pet":
+					$(".select").classList.remove("select");
+					e.classList.add("select");
+					try{a=data[e.getAttribute("data")]}catch(s){a=0}
+					if(a && a.name){
+						if(window.model=="icon"){
+							$("#res").innerHTML=	'';
+							for(b in a.items){
+								if(data.toy[b]){
+									c=$("#res div[data="+data.toy[b].cateName.replace(/[^\w\u4e00-\u9fa5]/g,"")+"]")
+									if(c.nofind){
+										c=document.createElement('div');
+										c.setAttribute("class","toytype");
+										c.setAttribute("data",data.toy[b].cateName.replace(/[^\w\u4e00-\u9fa5]/g,""));
+										$("#res").appendChild(c);
+									}
+									t=document.createElement('div');
+									t.setAttribute("class","item");
+									t.innerHTML='<img class="toy" src="https://gw.alicdn.com/imgextra/'+data.toy[b].icon+'" data="'+a.spineId+'_'+b+'" crossOrigin="anonymous">';
+									c.appendChild(t);
+								}
+							}
+						}else{
+							$("#res").innerHTML=	'<div class="item"><img id="pic" src="'+a.rescuephoto+'" crossOrigin="anonymous"></div>'+
+													'<div class="item"><img id="pic" src="'+a.statephoto+'" crossOrigin="anonymous"></div>';
+							for(b in a.items){
+								for(c=0;c<a.items[b].length;c++){
+									if(a.items[b][c]){
+										t=document.createElement('div');
+										t.setAttribute("class","item");
+										t.innerHTML='<img id="pic" src="'+a.items[b][c]+'" crossOrigin="anonymous">';
+										$("#res").appendChild(t);
+									}
+								}
+							}
+						}
+						Msg(""+a.name+"");
+					}else{
+						Msg("猫狗数据错误！");
+					}
+					break;
+				case "closetip":
+						$("#closetip").style.display="none"
+					break;
+				case "pic":
+					try{a=e.getAttribute("src")}catch(s){a=0}
+					if(a){
+						console.log(a)
+						$("#tip").innerHTML='';
+						t=document.createElement('div');
+						t.innerHTML='<img id="pic" style="width: 100%;" src="'+a+'" crossOrigin="anonymous">';
+						$("#tip").appendChild(t);
+						$("#closetip").style.display="block";
+					}
+					break;
+				case "update":
+					Msg("加载中！");
+					GetJS("../data.txt?t="+Math.floor((new Date().getTime())/1000),function(d){
+						d={};
+						if(data.level){
+							d.level=data.level;
+							GetJS("../info.txt?t="+Math.floor((new Date().getTime())/1000),function(){
+								if(info.toy){
+									d.toy=info.toy;
+									localStorage.setItem("AnimalData",JSON.stringify(d));
+									location.reload();
+								}else{
+									Msg("Info数据无效！");
+								}
+							},function(){
+								Msg("Info加载错误！");
+							});
+						}else{
+							Msg("Data数据无效！");
+						}
+					},function(){
+						Msg("Data加载错误！");
+					});
+					break;
+				case "model":
+					window.location.href=window.location.href.replace(/\?.+/,"")+"?model="+(window.model=="icon"?"picture":"icon");
+					break;
+				case "Load":
+					break;
+				case "Load":
+					break;
+				case "Load":
+					break;
+				default:
+					break;
+			}
+		}
+	}
+	function Stat(s,a,b,c,t){
+	//	c=0;
+		for(a in data){
+			if(!data[a].spineId)continue;
+			b=(data.level[a]<4&&data.level[a]>0?(["other","one","two","thr"][data.level[a]]):"new");
+	//		if(b=="new")c++;
+			t=document.createElement('div');
+			t.setAttribute("id","pet");
+			t.setAttribute("data",data[a].spineId);
+			t.setAttribute("class","item "+b);
+			t.innerHTML='<img id="peticon" src="'+data[a].icon+'" crossOrigin="anonymous"><span id="pettxt" class="line">'+data[a].name+'</span>';
+			c=document.querySelector("#"+(b=="new"?"top":(data[a].type=="cat"?"cat":"dog")));
+			c.insertBefore(t,c.firstChild);
+		}
+	}
+	function getQuery(s,d){
+		var t = new RegExp("(^|&)" + s + "=([^&]*)(&|$)","i")
+        , n = window.location.search.substr(1).match(t);
+        return null != n ? decodeURIComponent(n[2]) : (d?d:null)
+	}
+	function GetJS(u,suc,err){
+        var t=document.createElement('script');
+        t.setAttribute("src",u);
+        t.addEventListener("load",function(e){
+        	if(typeof suc == 'function')suc();
+        	e.target.parentElement.removeChild(e.target);
+        });
+        t.addEventListener("error",function(e){
+        	if(typeof err == 'function')err();
+        	e.target.parentElement.removeChild(e.target);
+        });
+        document.head.appendChild(t);
+	}
+	function Get(u,s,e){
+		var xhr = new XMLHttpRequest();
+		xhr.open("get", u);
+		xhr.addEventListener("readystatechange", function() {
+			var result = xhr;
+			if (result.status != 200) { //error
+				if(e) e(result);
+			} else if (result.readyState == 4) { //finished
+				if(s) s(result.response);
+			}
+		});
+		xhr.send();
+	}
+	function Init(){
+		window.model=window.location.search.match(/[?&]model=([^?&]+)/);
+		window.model=window.model&&window.model[1]=="picture"?"picture":"icon";
+		document.querySelector('.search').addEventListener("click",Bind);
+		Msg("加载完成！");
+		Stat();
+	}
+	function Loading(a,b,c){
+		var d=null,i,j,k,t;
+		Msg("正在请求旅舍数据！");
+		Get("image.json?t="+Math.floor((new Date().getTime())/1000),function(e){
+			delete window.data;delete window.tmp;
+			try{
+				e=JSON.parse(e)
+				window.tmp={items:e.items,spine:e.spine};
+				d=JSON.parse(localStorage.getItem("AnimalData"));
+			}catch(a){}
+			if (window.tmp) {
+				if(!d||!d.level||!d.toy)d={level:{},toy:{}};
+				window.data={spine:{},level:d.level,toy:d.toy};
+				for(i=0;i<tmp.items.length;i++){
+					for(j=0;j<tmp.items[i].animals.length;j++){
+						t=tmp.items[i].animals[j];
+						if(t.name&&t.spineId){
+							if(!data.spine[t.spineId]){
+								data.spine[t.spineId]=t.name;
+								data[t.spineId]={name:t.name,spineId:t.spineId,items:{}};
+							};
+							if(t.playActions[0])data[t.spineId].items[tmp.items[i].itemId]=t.playActions[0].downgrade.downgradeImages;
+						}
+					}
+				}
+				a="";
+				for(i=0;i<tmp.spine.length;i++){
+					t=tmp.spine[i];
+					if(data.spine[t.spineId]){
+						if(t.defaultActionDowngrade)for(j=0;j<t.defaultActionDowngrade.length;j++){
+							k=t.defaultActionDowngrade[j];
+							if(k.actionName){
+								data[t.spineId].items[k.actionName]=k.urls;
+							}
+						}
+						data[t.spineId].type=t.animalType;
+						data[t.spineId].icon=t.defaultImg;
+						data[t.spineId].rescuephoto=t.rescuephoto;
+						data[t.spineId].statephoto=t.statephoto;
+					}
+				}
+				
+				Init();
+			} else {
+				Msg("图标数据错误！");
+			}
+		},function(e){
+			Msg("无法获取图标数据！稍后刷新试试～");
+		});
+	}
+	document.addEventListener("DOMContentLoaded",Loading);
+	</script>
+	<style>
+			div{
+				padding: 0;border: 0;margin: 0;
+			}
+			input[type="text"]{
+				margin: 0;padding: 4px 0;height: 24px;border: 0;
+				vertical-align: top;border-style: outset;
+			}
+			#res{display: inline-block;vertical-align: top;/*overflow-y: scroll;min-height:30%;*/}
+			#dog,#cat{white-space: nowrap;vertical-align: top;overflow-x: scroll;scroll-snap-type: x mandatory;}
+			#top .item,#dog .item,#cat .item{width:calc(20vw - 4px);white-space:initial;/*scroll-snap-align:start;scroll-snap-stop:always;*/}
+			#res .item{width:calc(16.6% - 0px);margin:0;overflow: hidden;}
+			#res .toytype{border-bottom: 1px solid;}
+			body::-webkit-scrollbar{display:none;}
+			.item{margin: 1px;position: relative;display: inline-block;font-size:3vw;text-align: center;}
+			.select{margin: 0;border-radius: 10px;border: 1px solid blue;}
+			.item img{width:100%;vertical-align: middle;}
+			.item span{text-align: center;width:100%;vertical-align: middle;}
+			.noplay{
+				background:rgba(255 0 0 / 20%);
+			}
+			#res .noplay:before{
+				content: "×";
+				opacity: 0.8;
+				font-size: 14vw;
+				line-height: 14vw;
+				top: 0;
+				left: 0;
+				margin: 0;
+				padding: 0;
+			}
+			
+			.item:before{color:black;position: absolute;top: 2px;right: 2px;display: inline-block;font: 5vw/4vw system-ui,sans-serif;padding: 3px;border-radius: 8px;}
+			.guess:before{color:red;}
+			.one:before{content: "➀";background: #DFD;}
+			.two:before{content: "➁";background: #DDF;}
+			.thr:before{content: "➂";background: #FBB;}
+			.new:before{content: "New";background: #DDD;font-size: 3vw;font-weight: bold;color:red;}
+			.other:before{content: "Other";background: #DCC;}
+
+		</style>
+	</head>
+	<body style=""><div style="padding: 3px;background: #FCEEE3;border: 2px solid #ddd;border-radius: 4px;min-height: calc(100% - 10px);/**/" class="search">
+	<div id="closetip" style="text-align: center;width: 100%;height: 100%;position: fixed;background: #aa9;top: 0;left: 0;display: none;z-index: 10;">
+		<div id="tip" style="width: 320px;height: 380px;margin: -200px -170px;position: relative;top: 50%;left: 50%;background: white;padding: 10px;">
+		</div>
+	</div>
+	<div style=""><!--
+		--><input id="update" type="button" style="width: 18%;text-align: center;color: blue;" value="更新" ><input id="upload" type="button" style="display:none;width: 18%;text-align: center;color: blue;" value="导入" ><input id="msg" type="text" style="width: 64%;text-align: center;color: blue;" value="消息区域" disabled=""><input id="model" type="button" style="width: 18%;text-align: center;color: blue;" value="切换" ><!--
+	--></div>
+	
+	<div style="/*min-height:calc(100% - 24px);*/"><!--
+		--><div><div id="top" style="white-space: initial;"></div></div><!--
+		--><div><div id="dog"></div></div><!--
+		--><div><div id="cat"></div></div><!--
+		--><!--
+		--><div id="res" style="width: 100%;"></div><!--
+	--></div>
+	</div>
+	
+</body></html>

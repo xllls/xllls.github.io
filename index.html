@@ -1,0 +1,461 @@
+﻿
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-cn"><head>
+    <style>
+    body{margin: 2px;}
+	</style>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8; X-Wap-Proxy-Cookie=none">
+	<link rel="Shortcut Icon" href="https://gw.alicdn.com/imgextra/i3/O1CN01wXAetk1tWNBC7bwRR_!!6000000005909-2-tps-120-120.png"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<title>旅舍小公举</title>
+	<script>
+	var img="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABZ0RVh0Q3JlYXRpb24gVGltZQAwNC8yOC8yM/7Zi8QAAAAfdEVYdFNvZnR3YXJlAE1hY3JvbWVkaWEgRmlyZXdvcmtzIDi1aNJ4AAAADUlEQVQImWP4//8/AwAI/AL+hc2rNAAAAABJRU5ErkJggg=="
+	function $(obj){return document.getElementById(obj);}
+	function Msg(d){
+		var t=$("msg").value;
+		if(t.indexOf(d)==0) d=t+"！";
+		$("msg").value=d;
+	}
+	function Bind(e){
+		var a,b,c,t;
+		if(e&&e.target){
+			e=e.target;
+			switch(e.id){
+				case "submit":
+					search();
+					break;
+				case "peticon":
+				case "pettxt":
+					e=e.parentElement;
+				case "pet":
+					try{a=e.getAttribute("data")}catch(s){}
+					location.hash="#type=pet&value="+encodeURIComponent(a);
+					//history.pushState("text",null,location.href);
+					Stat({type:"pet",value:a});
+					break;
+				case "friendicon":
+				case "friendtxt":
+					e=e.parentElement;
+				case "friend":
+					try{a=e.getAttribute("data")}catch(s){a=0}
+					location.hash="#type=friend&value="+encodeURIComponent(a);
+					Stat({type:"friend",value:a});
+					break;
+				case "map":
+					e=e.parentElement;
+				case "closemap":
+						window.history.back();
+						e.style.display="none"
+					break;
+				case "one":
+					a="1";
+				case "two":
+					a=a?a:"2";
+				case "thr":
+					a=a?a:"3";
+					location.hash="#type=level&value="+encodeURIComponent(a);
+					Stat({type:"level",value:a});
+					break;
+				case "all":
+					location.hash="#type=search&value=";
+					Stat({type:"search",value:""});
+					break;
+				case "Load":
+					break;
+				case "screenshot":
+					try{a=e.getAttribute("data")}catch(s){}
+					history.pushState("text",null,location.href);
+					Cut(a);
+					break;
+				case "Load":
+					break;
+				case "rank":
+					location.hash="#type=rank&value=0";
+					Stat({type:"rank",value:"0"});
+					break;
+				case "Load":
+					break;
+				default:
+					break;
+			}
+		}
+	}
+	function search(a){
+		a=$("word").value;
+		location.hash="#type=search&value="+encodeURIComponent(a);
+		Stat({type:"search",value:a});
+	}
+	function Cut(s,a,b,c,i,t){
+		a=data.list[s];
+		if(a){
+			console.log(a);
+			$("maphead").setAttribute("src","https://wwc.alicdn.com/avatar/getAvatar.do?userIdStr="+a.icon+"&_input_charset=UTF-8&width=160&height=160&type=sns");
+			$("mapusername").innerText="昵称："+a.nick;
+			$("mapdonate").innerText="捐赠："+a.donate+" ❤";
+			$("mapcan").innerHTML='状态：<b style="color:'+(a.can?'green':'#a00')+';">'+(a.can?'可梳毛':'梳毛已满')+'</b>';
+			if(icon.bg[a.bg])for(b=0;b<icon.bg[a.bg].length;b++){
+				$("mapbg"+b).setAttribute("src","https://gw.alicdn.com/imgextra/"+icon.bg[a.bg][b]);
+			}
+			for(b=0;b<a.animal.length;b++){
+				c=a.animal[b];s="";
+				if(c[2]!=0&&c[2]!=3&&c[0]&&c[1]&&icon.icon[c[0]][c[1]]){
+					s='<div><img src="https://gw.alicdn.com/imgextra/'+icon.icon[c[0]][c[1]][c[2]?c[2]:"2"]+'"/></div><div style="bottom: -12px;"><b>'+icon.pet[c[0]]+'</b></div>';
+				}else{
+					if(c[1]){
+						if(icon.toy[c[1]].backSlot)s+='<div><img src="https://gw.alicdn.com/imgextra/'+icon.toy[c[1]].backSlot.icon+'" style="width:'+Math.ceil(icon.toy[c[1]].backSlot.width/4.2)+'%"/></div>';
+						if(icon.toy[c[1]].frontSlot)s+='<div><img src="https://gw.alicdn.com/imgextra/'+icon.toy[c[1]].frontSlot.icon+'" style="width:'+Math.ceil(icon.toy[c[1]].frontSlot.width/4.2)+'%"/></div>';
+					}
+					if(c[0]){
+						s+='<div><img style="margin-bottom: -25%;" src="https://gw.alicdn.com/imgextra/'+icon.icon[c[0]]["sit"][c[2]?c[2]:"2"]+'"/></div>';
+						s+='<div style="bottom: -12px;margin-bottom: -25%;"><b>'+icon.pet[c[0]]+'</b></div>';
+					}
+				}
+				$("mappos"+b).innerHTML=s;
+			}
+			
+			$("closemap").style.display="table";
+		}else{
+			M("查无此人")
+		}
+	}
+	function Stat(s,a,b,c,i,t){
+		c=[];
+		switch(s.type){
+			case "search":
+				for(a in data.pet)if(info.pet[a]&&info.pet[a].name.indexOf(s.value)>=0)c.push(a);
+				break;
+			case "level":
+				for(a in data.level)if(data.level[a]==s.value)c.push(a);
+				break;
+			case "friend":
+				for(a=0;a<data.list.length;a++)if(data.list[a].icon==s.value)b=a;
+				if(data.list[b])for(a in data.pet)if(data.pet[a].indexOf(parseInt(b))>-1)c.push(a);
+				break;
+			case "pet":
+				if(info.pet[s.value])c.push(s.value);
+				break;
+			default:
+				break;
+		}
+			console.warn(c);
+			if(s.type=="rank"){
+				$("res").innerHTML="";
+				for(a=0;a<data.list.length;a++){
+					i=data.list[a];
+					t=document.createElement('div');
+					t.setAttribute("id","friend");
+					t.setAttribute("data",i.icon);
+					t.setAttribute("class","item");
+					t.innerHTML='<img id="friendicon" '+(i.can?'':'style="opacity: 0.3;"')+' src="https://wwc.alicdn.com/avatar/getAvatar.do?userIdStr='+i.icon+'&_input_charset=UTF-8&width=160&height=160&type=sns"><span id="friendtxt" class="line">'+i.nick+'</span><span id="friendtxt" class="line border">❤ '+i.donate+'</span>';
+					$("res").appendChild(t);
+				}
+				a=(new Date()).getTime()-data.time;
+				Msg("查询到【"+data.list.length+"】位好友，更新时间："+(a>7200000?(Math.round(a/360000)/10+"小时"):(Math.round(a/60000)+"分钟"))+"前！");
+			}else if(s.type!="friend"&&c.length==1){
+				b=c[0];
+				c=info.pet[b];
+				if(c.favorites){
+				a='<div style="text-align: center;border-bottom: 2px solid;"><table unselectable="on" style="width: 100%;font-weight: normal;font-size: 4vw;"><thead align="center"><tr><td colspan="3"><h3 style="margin: 0;"><span class="line" style="color:blue;vertical-align: top;">'+c.name+'</span>（'+(data.level[b]?data.level[b]:"???")+'档）</h3></td></tr></thead><tbody><tr>'+
+						'<td rowspan="4" style="width: 30%;" align="center"><img src="https://gw.alicdn.com/imgextra/'+c.icon+'" style="width: 100%;"></td>'+
+						'<td style="width: 15%;">品种：</td><td style="width:55%;font-weight:bold;">'+c.typeName+'（'+c.sex+'）</td></tr><tr>'+
+						'<td>来自：</td><td style="font-weight:bold;">'+c.address+'</td></tr><tr>'+
+						'<td>救于：</td><td style="font-weight:bold;">'+c.findDate+'</td></tr><tr>'+
+						'<td>状态：</td><td style="font-weight:bold;color:'+(c.state=="normal"?"black":"#aaa")+';">'+(c.state=="adopted"?"被领养":(c.state=="other"?"无后续合作":(c.state=="dead"?"回"+(c.category=="DOG"?"汪":"喵")+"星":"安好")))+'</td></tr></tbody><tfoot align="center"><tr>'+
+						'<td align="right">吸引玩具：</td>'+
+						'<td align="left" colspan="2">';
+						
+				for(i=0;i<c.favorites.length;i++){
+					t=info.toy[c.favorites[i]];
+					if(t)a+='<img src="https://gw.alicdn.com/imgextra/'+t.icon+'" style="height: 40px;">';
+				}
+						
+				a+='</td></tr></tfoot></table></div>'+
+				'<div id="res_on"></div><div id="res_off"></div>';
+				}else{
+				a='<div style="text-align: center;border-bottom: 2px solid;"><img src="https://gw.alicdn.com/imgextra/'+c.icon+'" style="width: 20%;"><br/><span class="line" style="color:blue;vertical-align: top;">'+c.name+'</span></div><div id="res_on"></div><div id="res_off"></div>';
+				}
+				
+				$("res").innerHTML=a;
+				c=data.pet[b];
+				for(a=c.length-1;a>=0;a--){
+					i=data.list[c[a]];
+					t=document.createElement('div');
+					t.setAttribute("id","friend");
+					t.setAttribute("data",i.icon);
+					t.setAttribute("class","item");
+					t.innerHTML='<img id="friendicon" src="https://wwc.alicdn.com/avatar/getAvatar.do?userIdStr='+i.icon+'&_input_charset=UTF-8&width=160&height=160&type=sns"><span id="friendtxt" class="line">'+i.nick+'</span><span id="friendtxt" class="line border">❤ '+i.donate+'</span>';
+					$(i.can?"res_on":"res_off").appendChild(t);
+				}
+				a=(new Date()).getTime()-data.time;
+				Msg("救助【"+info.pet[b].name+"】的好友，更新时间："+(a>7200000?(Math.round(a/360000)/10+"小时"):(Math.round(a/60000)+"分钟"))+"前！");
+			}else{
+				if(s.type=="friend"&&data.list[b]){
+					a=data.list[b];
+					a='<table unselectable="on" style="width: 100%;font-weight: normal;font-size: 4vw;"><thead align="center"><tr></tr></thead><tbody><tr><td rowspan="3" style="width: 20%;" align="center"><img src="https://wwc.alicdn.com/avatar/getAvatar.do?userIdStr='+a.icon+'&_input_charset=UTF-8&width=160&height=160&type=sns" style="width: 100%;"></td><td style="width: 15%;">昵称：</td><td style="width:45%;font-weight:bold;">'+a.nick+'</td><td rowspan="3" style="width: 20%;"><button id="screenshot" type="button" data="'+b+'" style="margin-left: 8px;padding:1vw 2vw;line-height: 5vw;vertical-align: top;font-size: 4vw;" value="">旅舍<br/>快照</button></td></tr><tr><td>捐赠：</td><td style="font-weight:bold;">'+a.donate+' ❤</td></tr><tr><td>状态：</td><td style="font-weight:bold;color:'+(a.can?'green':'#a00')+';">'+(a.can?'能梳毛':'梳毛已满')+'</td></tr></tbody></table>';
+				}else{
+					a='<div id="new"></div><div id="normal" style="width: 100%;margin: 0;"></div><div id="line">-------------被领养-------------</div><div id="adopted" style="width: 100%;margin: 0;"></div><div id="line">------------回喵汪星------------</div><div id="dead" style="width: 100%;margin: 0;"></div><div id="line">---------未参与后续合作---------</div><div id="other" style="width: 100%;margin: 0;"></div><div id="line">---------数据未更新！等待归档中---------</div>';
+				}
+				$("res").innerHTML=a;
+				a=getQuery("sort","");
+				if(a==1){
+					c=c.sort(function(a,b){a=info.pet[a].animalId,b=info.pet[b].animalId;return (a&&b?(a-b):(b?-1:0));});
+				}else if(a==2){
+					c=c.sort(function(a,b){return data.pet[a].length-data.pet[b].length;});
+				}else{
+					c=c.sort(function(a,b){return info.pet[a].name.localeCompare(info.pet[b].name, 'zh');});
+				}
+				for(b=0;b<c.length;b++){
+					i=info.pet[c[b]];
+					t=document.createElement('div');
+					t.setAttribute("id","pet");
+					t.setAttribute("data",c[b]);
+					t.setAttribute("class","item");
+					t.innerHTML='<img id="peticon" src="https://gw.alicdn.com/imgextra/'+i.icon+'"><div class="'+(i.new?"new":({"1":"one","2":"two","3":"thr","undefined":"one"})[data.level[c[b]]])+'"></div><span id="pettxt" class="line">'+i.name+'('+data.pet[c[b]].length+')</span>';
+					$(s.type=="friend"?"res":(i.new?"new":(a==1&&i.state?i.state:"res"))).appendChild(t);
+					
+				}
+				a=(new Date()).getTime()-data.time;
+				Msg("查询到【"+c.length+"】只猫狗信息，更新时间："+(a>7200000?(Math.round(a/360000)/10+"小时"):(Math.round(a/60000)+"分钟"))+"前！");
+			}
+	}
+	
+	function getQuery(s,d){
+		var t = new RegExp("(^|&)" + s + "=([^&]*)(&|$)","i")
+        , n = window.location.search.substr(1).match(t);
+        return null != n ? decodeURIComponent(n[2]) : (d?d:null)
+	}
+	function getHash(s,d){
+		var t = new RegExp("(^|&)" + s + "=([^&]*)(&|$)","i")
+        , n = window.location.hash.substr(1).match(t);
+        return null != n ? decodeURIComponent(n[2]) : (d?d:null)
+	}
+	function Init(){
+		var a,b={"pet":{
+		"1052": {
+			"new": "",
+			"name":"奈雪plus",
+			"icon": "i1/O1CN01iQfNcu1rXAjcoliZS_!!6000000005640-2-tps-202-202.png"
+		},"1053": {
+			"new": "",
+			"name": "黑霸",
+			"icon": "i3/O1CN0183qOdg1rIW3hapWT1_!!6000000005608-2-tps-202-202.png"
+		},"1054": {
+			"new": "1",
+			"name": "渣男",
+			"icon": "i4/O1CN01QfqnAL1blL8L0DFSi_!!6000000003505-2-tps-202-202.png"
+		},"1055": {
+			"new": "",
+			"name": "小辣椒",
+			"icon": "i3/O1CN01xq9XbL1qsrsULsuxQ_!!6000000005552-2-tps-202-202.png"
+		},"2058": {
+			"new": "",
+			"name": "披风",
+			"icon": "i2/O1CN01PfDl3t1hXUr38j9JY_!!6000000004287-2-tps-202-202.png"
+		},"2059": {
+			"new": "",
+			"name": "小黄狗",
+			"icon": "i1/O1CN01eHxR4D1dbq9OmQitB_!!6000000003755-2-tps-202-202.png"
+		},"2060": {
+			"new": "1",
+			"name": "毛十八",
+			"icon": "i2/O1CN010fITxT1uPKntYV92e_!!6000000006029-2-tps-202-202.png"
+		},"2055": {
+			"new": "",
+			"name": "荷叶",
+			"icon": "i2/O1CN013VWhIy1jaMYUbLxOU_!!6000000004564-2-tps-202-202.png"
+		},"2056": {
+			"new": "",
+			"name": "小丫",
+			"icon": "i1/O1CN01nYDDpi2803YQlFlCA_!!6000000007869-2-tps-202-202.png"
+		},"2057": {
+			"new": "",
+			"name": "星星",
+			"icon": "i4/O1CN01cKEc3r1Cwujpn9ooU_!!6000000000146-2-tps-202-202.png"
+		}}};
+		window.info=extend(window.info,b);
+		document.querySelector('.search').addEventListener("click",Bind);
+		document.querySelector('#word').addEventListener("keydown",function(e){if(e.keyCode==13)search()});
+		a=getHash("value");b=getHash("type");
+		if(a&&b){Stat({type:b,value:a});}else{Stat({type:"search",value:""});}
+		window.addEventListener("popstate", function() {
+			a=getHash("value");b=getHash("type");
+			$("closemap").style.display="none";
+			if(a&&b){Stat({type:b,value:a});}else{Stat({type:"search",value:""});}
+		});
+	}
+	function extend(a,b){
+		if(a instanceof Array&&b instanceof Array){
+			a=a.concat(b)
+		}else if(!(a instanceof Array||b instanceof Array)){
+			for(i in b){
+				if(!a[i]){
+					a[i]=b[i]
+				}else if(typeof a[i]=='object'&&typeof b[i]=='object'){
+					if(a[i] instanceof Array&&b[i] instanceof Array){
+						a[i]=a[i].concat(b[i])
+					}else if(!(a[i] instanceof Array||b[i] instanceof Array)){
+						a[i]=extend(a[i],b[i])
+					}else{
+						a[i]=b[i]
+					}
+				}else{
+					a[i]=b[i]
+				}
+			}
+		}else{
+			a[i]=b[i]
+		}
+		return a;
+	}
+	function load(url,suc,err) {
+		var a = document.createElement("script"),b;
+		a.onerror = function(){
+			if(typeof err=="function") err();
+		};
+		a.onload = function(){
+			if(typeof suc=="function") suc();
+		};
+		b=url.indexOf("#");
+		a.src = (b>0?url.substr(0,b):url)+(url.match(/\?/)?"&":"?")+"t="+(new Date()).getTime();
+		(document.head?document.head:document.documentElement).appendChild(a);
+	};
+	function Loading(){
+		load("icon.txt",function(){
+		load("info.txt",function(){
+			load("data.txt",function(i,j,k,t){
+				if(!data||!data.list) return Msg("数据错误！");
+				data.pet={};
+				for(i=0;i<data.list.length;i++){
+					for(j=0;j<data.list[i].animal.length;j++){
+						t=data.list[i].animal[j];
+						if(!t[0]) continue;
+						if(!data.pet[t[0]])data.pet[t[0]]=[];
+						data.pet[t[0]].unshift(i);
+					}
+				}
+				Init();
+			},function(){
+				Msg("用户数据错误！");
+			});
+		},function(){
+			Msg("毛孩数据错误！");
+		});
+		},function(){
+			Msg("毛孩数据错误！");
+		});
+		var a=getQuery("sort",""),b=document.querySelector(".normal");
+		if(a==1&&b)b.setAttribute("class","office");
+	}
+	document.addEventListener("DOMContentLoaded",Loading);
+	</script>
+	</head>
+	<body style=""><div style="padding: 3px;background: #FCEEE3;border: 2px solid #ddd;border-radius: 4px;height: calc(100% - 10px);" class="search">
+	
+		<div id="closemap" style="width: 100%;height: 100%;margin: 0;padding: 0;position: fixed;top: 0;left: 0;z-index: 2;background: #adadad;display:none;">
+			<div id="map" style="width: 100%;overflow: hidden;display: table-cell;vertical-align: middle;">
+				<div style="width: calc(100% - 0px);margin: 0px;position: relative;">
+					<div id="mapbg"
+						><img id="mapbg0" src="https://gw.alicdn.com/imgextra/i2/O1CN01g6FDWc23XQF5KKZXt_!!6000000007265-0-tps-750-812.jpg"
+						><img id="mapbg1" src="https://gw.alicdn.com/imgextra/i3/O1CN01lyOfY923TIgH8FcWu_!!6000000007256-0-tps-750-812.jpg"
+						><img id="mapbg2" src="https://gw.alicdn.com/imgextra/i1/O1CN01wmAyIY23nuVDdXGJj_!!6000000007301-0-tps-750-812.jpg"
+						><img id="mapbg3" src="https://gw.alicdn.com/imgextra/i1/O1CN015O6JlE1C5KJIrDB5a_!!6000000000029-0-tps-750-812.jpg"
+					></div>
+					<div id="mapother" style="position: absolute;top: 0;left: 0;width: 100%;height: 100%;"
+						><table unselectable="on" style="width: 36%;font-size:2.5vw;background: #f3f3f3;border-radius: 8px;border: 1px solid;margin: 92% 33%;"><tbody><tr><td rowspan="3" style="width: 25%;" align="center"><img id="maphead" src="" style="border-radius: 4px;width: 100%;"></td><td id="mapusername" style="width:75%;font-weight:bold;"></td></tr><tr><td id="mapdonate" style="font-weight:bold;"></td></tr><tr><td id="mapcan"></td></tr></tbody></table
+						><img id="mapmail" src="https://gw.alicdn.com/imgextra/i3/O1CN01HXm83t23BtZPZ4AaB_!!6000000007218-2-tps-240-238.png" alt="信箱" style="width: 13%;position: absolute;top: 36.5%;left: 70%;margin: -6.5%;"
+						><img id="mapbowl" src="https://gw.alicdn.com/imgextra/i4/O1CN012btzcs1XASYTA5NmA_!!6000000002883-2-tps-199-146.png" alt="饭盒" style="width: 13%;position: absolute;top: 83%;left: 60%;margin: -6.5%;"
+						><img id="mapmail" src="https://gw.alicdn.com/imgextra/i1/O1CN01lopL1V1GX2grTkNlT_!!6000000000631-2-tps-223-223.png" alt="爱心小铺" style="width: 14.6%;position: absolute;left: 30.7%;margin: -7.3%;top: 35.2%;"
+					></div>
+					<div id="mapanimal" style="position: absolute;top: 0;left: 0;width: 100%;height: 100%;text-align: center;">
+						<div id="mappos9" class="pos" style="top: 100.1%;left: 89.9%;"></div>
+						<div id="mappos8" class="pos" style="top: 101.3%;left: 9.2%;"></div>
+						<div id="mappos7" class="pos" style="top: 80%;left: 89.1%;"></div>
+						<div id="mappos6" class="pos" style="top: 86.4%;left: 50%;"></div>
+						<div id="mappos5" class="pos" style="top: 82.5%;left: 9.5%;"></div>
+						<div id="mappos4" class="pos" style="top: 75.6%;left: 71.0%;"></div>
+						<div id="mappos3" class="pos" style="top: 79.7%;left: 29.3%;"></div>
+						<div id="mappos2" class="pos" style="top: 61.4%;left: 88.5%;"></div>
+						<div id="mappos1" class="pos" style="top: 65.7%;left: 49.2%;"></div>
+						<div id="mappos0" class="pos" style="top: 65.6%;left: 9.1%;"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+	<div style="">
+		<input type="text" style="width: 80%;" id="word"><input type="button" id="submit" value="查询" style="width: 20%;"><input id="msg" type="text" style="width: 100%;text-align: center;color: blue;" value="消息区域" disabled=""><style>
+			.icon{
+				font:20px/24px iconfont!important;
+				border-radius: 30px;width: 30px;
+				color: #864;background: #EDCE98;
+				margin: 0;padding: 5px 0;border: 0;
+			}
+			.icon:hover{background: #FCEEE3;border-top: 2px #234 solid;padding: 4px 0;}
+			.line{overflow:hidden;text-overflow:ellipsis;display:inline-block;word-break:keep-all;white-space:nowrap;}
+			input{
+				margin: 0;padding: 4px 0;height: 24px;border: 0;
+				vertical-align:middle;border-style: outset;
+			}
+			#pet{font-size: 3vw;padding: 8px 0;text-align: center;}
+			#res_off #friendicon{opacity: 0.3;}
+			#res_off #friendicon:hover{opacity: 1;}
+			
+			
+			.thr,.two,.one,.new{
+				position: absolute;
+				top: 10px;
+				right: 2px;
+				display: inline-block;
+				height: 32px;
+				width: 32px;
+				border-radius: 50%;
+			}
+			.new{
+				background: url(new.png) 0 0/32px  no-repeat;
+			}
+			.one{
+				background: url(mmexport1680932140860.png) 0 0/32px  no-repeat;
+			}
+			.two{
+				background: url(mmexport1680932162740.png) 0 0/32px  no-repeat;
+			}
+			.thr{
+				background: url(mmexport1680932165082.png) 0 0/32px  no-repeat;
+			}
+			
+			#mapbg img{width:50%;}
+			.pos{width: 28%;position: absolute;margin: -14%;}
+			.pos>div{text-align: center;position: absolute;bottom: 0;width: 100%;}
+			.pos>div img{width:100%;}
+			.pos>div b{display: inline-block;font-size: 2.5vw;padding:0.3vw 2vw;background: #f8dfc9;border: 2px solid #886454;border-radius: 13px;color: #886454;}
+			
+			.office .item{width:calc(33% - 4px);}
+			.normal .item{width:calc(25% - 4px);}
+			.normal #line{display: none;}
+			#line{text-align: center;margin: 8px 0 0 0;}
+			.item{position: relative;display: inline-block;font-size:2vw;;margin:2px;text-align: center;}
+			.item img{width:100%;vertical-align: middle;border-radius: 8px;}
+			.item span{width:100%;display: inline-block;vertical-align: middle;border-radius: 8px;padding:2px;}
+			.item .border{width: unset;font-size: 2.5vw;padding:0.3vw 1vw;background: #ccc;border-radius: 13px;color: #000;position: absolute; top: 0;right: 0;}
+/*			.item:before{position: absolute;top: 10px;right: 2px;display: inline-block;font: 12px/14px system-ui,sans-serif;height: 15px;padding: 3px;border-radius: 8px;}
+			.item .border{width: unset;font-size: 2.5vw;padding:0.3vw 1vw;background: #f8dfc9;border: 2px solid #886454;border-radius: 13px;color: #886454;}
+			.one:before{content: "3次";background: #DAA;}
+			.two:before{content: "7次";background: #DBB;}
+			.thr:before{content: "10次";background: #DCC;}
+*/
+		</style>
+		<div><table style="width: 100%;text-align: center;border-spacing: 0;"><tbody><tr>
+		<td id="all" class="icon">全部</td>
+		<td id="one" class="icon">一档</td>
+		<td id="two" class="icon">二档</td>
+		<td id="thr" class="icon">三档</td>
+		<td id="rank" class="icon">排行</td>
+		</tr></tbody></table></div>
+	</div>
+	<div class="normal" style="overflow-y: scroll;height:calc(100% - 84px);">
+	<div id="res" style="width: 100%;margin: 0;">
+	</div>
+	</div>
+	</div>
+	
+</body></html>

@@ -1,0 +1,291 @@
+﻿
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-cn"><head>
+    <style>
+    body{margin: 2px;}
+	</style>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8; X-Wap-Proxy-Cookie=none">
+<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<title>旅舍玩具搭配模拟</title>
+	<script>
+	function $(obj){return document.getElementById(obj);}
+	function Msg(d){
+		var t=$("msg").value;
+		if(t.indexOf(d)==0) d=t+"！";
+		$("msg").value=d;
+	}
+	function load(url,suc,err) {
+		var a = document.createElement("script"),b;
+		a.onerror = function(){
+			if(typeof err=="function") err();
+		};
+		a.onload = function(){
+			if(typeof suc=="function") suc();
+		};
+		b=url.indexOf("#");
+		a.src = (b>0?url.substr(0,b):url)+(url.match(/\?/)?"&":"?")+"t="+Math.floor((new Date().getTime())/1000);
+		(document.head?document.head:document.documentElement).appendChild(a);
+	};
+	function Upmatch(obj,a,b,i){
+		a=$("res_choice").children;
+		for(i=0;i<a.length;i++)a[i].classList[obj.indexOf(a[i].getAttribute("data"))<0?"remove":"add"]("nomatch");
+	}
+	function Up(obj,a){
+		if(a){
+			a=$("res_choice");a.appendChild(obj);
+		}else{
+			a=$("res_nochoice");a.insertBefore(obj,a.firstChild);
+		}
+	}
+	function checkmatch(arr,brr,a,b,c,i,j,k,o,p,q,t){
+		t=[];
+		for(i=0;i<tmp.pet.length;i++){
+			a=favor[tmp.pet[i]].toy;
+			arr=[];
+			for(j=0;j<a.length;j++){
+				if(tmp.toy.indexOf(a[j])>-1)arr.push(a[j]);
+			}
+			if(!arr.length){t.push(tmp.pet[i]);continue}
+			brr=[];c=0;
+			for(j=0;j<arr.length;j++){
+				b=toy[arr[j]]
+				for(k=0;k<b.length;k++){
+					if(tmp.pet.indexOf(b[k])>-1){
+						c++;
+						if(brr.indexOf(b[k])<0)brr.push(b[k]);
+					};
+				}
+			}
+			if(arr.length<brr.length||arr.length*brr.length!=c)t.push(tmp.pet[i]);
+			
+		}
+		console.log("冲突组合：",t);
+		return t;
+	}
+	function Loading(a,b,c,d,i,j,k){
+		Init();
+		document.querySelector('.search').addEventListener("click",Bind);
+	}
+	function Init(a,b,c,d,i,j,k){
+		window.favor=JSON.parse(localStorage.getItem("AnimalFavor"));
+		window.toy={};
+		if(window.favor&&favor.setting){
+			window.tmp={pet:[],toy:[],add:function(a){
+				if(tmp[a.type].indexOf(a.value)<0)tmp[a.type].push(a.value)
+			},del:function(a,b){
+				b=tmp[a.type].indexOf(a.value);
+				if(b>-1)tmp[a.type].splice(b, 1)
+			}};
+			$("res_nochoice").innerHTML='';
+			for(var i in favor){
+				if(i=="setting")continue;
+				b=document.createElement('div');
+				b.setAttribute("style","border-bottom: 1px solid;white-space: nowrap;overflow-x: auto;");
+				b.setAttribute("data",i);
+				b.setAttribute("class",["undefined","one","two","thr"][favor[i].level]);
+				a=document.createElement('label');
+				a.setAttribute("id","pet");
+				a.setAttribute("data",JSON.stringify({type:"pet",value:i}));
+				a.setAttribute("class","item");
+				a.innerHTML='<img id="peticon" src="https://gw.alicdn.com/imgextra/'+favor[i].icon+'"><input data="'+i+'" type="checkbox"/><span id="pettxt" class="line">'+favor[i].name+'</span>';
+				b.appendChild(a);
+				for(j=0;j<favor[i].toy.length;j++){
+					c=favor[i].toy[j];
+					if(!toy[c])toy[c]=[];
+					if(toy[c].indexOf(i)<0)toy[c].push(i);
+					a=document.createElement('label');
+					a.setAttribute("id","toy");
+					a.setAttribute("data",JSON.stringify({type:"toy",value:c}));
+					a.setAttribute("class","item");
+					a.innerHTML='<span id="toytxt">'+c+'</span><input data="'+c+'" type="checkbox"/>';
+					b.appendChild(a);
+				}
+				$("res_nochoice").appendChild(b);
+			}
+			$("result").setAttribute("class",favor.setting.onlyone?"onlyone":"");
+			if(!favor.setting.blacklist)favor.setting.blacklist=[];
+			for(i in toy){
+				a=favor.setting.blacklist.indexOf(i)>-1;
+				b=document.querySelectorAll("input[data=\""+i+"\"]");
+				b.forEach(function(e){
+				if(a&&e.checked)e.click();
+					e.parentElement.style.display=a&&e.parentElement?"none":"inline-block";
+				})
+			}
+			//恢复上次所选的代码
+			
+			//code
+			Msg("加载完成！")
+		}else{
+			Msg("数据不存在！更新试试")
+		}
+	}
+	function Bind(e){
+		var a,b,c,t,i,j,k;
+		if(e&&e.target){
+			e=e.target;
+			a=e.getAttribute("type");
+			if(a=="checkbox"){
+				try{
+					a=e.checked;
+					e=e.parentElement;
+					b=JSON.parse(e.getAttribute("data"));
+				}catch(s){b={}}
+				switch(b.type){
+					case "pet":
+					case "toy":
+						tmp[a?"add":"del"](b);
+						if(b.type=="toy"){
+							c=document.querySelectorAll("input[data=\""+b.value+"\"]");
+							for(i=0;i<c.length;i++){
+								c[i].checked=a;
+								c[i].parentElement.style.opacity=a?"1":"0.3";
+							}
+						}else{
+							e.style.opacity=a?"1":"0.3";
+							Up(e.parentElement,a);
+						}
+						a=checkmatch();
+						if(a.length==0){
+							Msg("选择【"+tmp.pet.length+"】个毛孩，【"+tmp.toy.length+"】个玩具");
+						}else{
+							Msg("【"+a.length+"】个毛孩存在冲突");
+						}
+						Upmatch(a);
+						break;
+					case "setonlyone":
+						favor.setting.onlyone=a;
+						localStorage.setItem("AnimalFavor",JSON.stringify(favor));
+						$("result").setAttribute("class",a?"onlyone":"");
+						break;
+					case "settoy":
+						c=favor.setting.blacklist.indexOf(b.value);
+						if(a&&c<0)favor.setting.blacklist.push(b.value);
+						if(!a&&c>-1)favor.setting.blacklist.splice(c,1);
+						localStorage.setItem("AnimalFavor",JSON.stringify(favor));
+						console.log(c)
+						for(i in toy){
+							a=favor.setting.blacklist.indexOf(i)>-1;
+							b=document.querySelectorAll("input[data=\""+i+"\"]");
+							console.log(i,a)
+							b.forEach(function(e){
+								if(a&&e.checked)e.click();
+								e.parentElement.style.display=a&&e.parentElement?"none":"inline-block";
+							})
+						}
+						break;
+					case "Load":
+						break;
+					default:
+						console.log(e)
+					break;
+				}
+			}else{
+				switch(e.id){
+					case "peticon":
+					case "pettxt":
+						e=e.parentElement;
+					case "pet":
+						try{a=e.getAttribute("data")}catch(s){}
+						break;
+					case "update":
+						e.disabled=1;
+						Msg("加载中！");
+						load("../info.txt",function(){
+							load("../data.txt",function(a,b,c,i,j,k,t){
+								if(!window.data||!window.info) return Msg("数据错误！");
+								a={};
+								for(i in info.pet){
+									b=[];
+									for(j=0;j<info.pet[i].favoriteItemIds.length;j++){
+										c=info.pet[i].favoriteItemIds[j];
+										if(!info.toy[c]) continue;
+										c=info.toy[c].cateName;
+										if(b.indexOf(c)<0)b.push(c);
+									}
+									a[i]={name:info.pet[i].name,icon:info.pet[i].icon,level:data.level[i],toy:b};
+								}
+								a["setting"]=favor&&favor.setting?favor.setting:{blacklist:[]};
+								localStorage.setItem("AnimalFavor",JSON.stringify(a));
+								location.reload();
+							},function(){
+								Msg("用户数据错误！");
+							});
+						},function(){
+							Msg("毛孩数据错误！");
+						});
+						break;
+					case "setting":
+						$("tip").innerHTML='<label data="{&quot;type&quot;:&quot;setonlyone&quot;,&quot;value&quot;:&quot;onlyone&quot;}"><input type="checkbox" '+(favor.setting.onlyone?'checked="a"':'')+'><span>仅显示一档</span></label><p>--------玩具黑名单名单（勾选则不显示）--------</p>';
+						for(i in toy){
+							a=favor.setting.blacklist.indexOf(i)<0;
+							b=document.createElement('label');
+							b.setAttribute("data",JSON.stringify({type:"settoy",value:i}));
+							b.setAttribute("class","item");
+							b.innerHTML='<span>'+i+'</span><input type="checkbox" '+(a?'':'checked="a"')+'>';
+							$("tip").appendChild(b);
+						}
+						/*
+						t=document.createElement('div');
+						t.innerHTML='<img id="pic" style="width: 100%;" src="'+a+'" crossOrigin="anonymous">';
+						$("tip").appendChild(t);
+						*/
+						$("closetip").style.display="block";
+						break;
+					case "Load":
+						break;
+					case "closetip":
+						$("closetip").style.display="none"
+					break;
+					default:
+						console.log(e)
+					break;
+				}
+			}
+		}
+	}
+	document.addEventListener("DOMContentLoaded",Loading);
+	document.addEventListener('touchstart', function(){}, {passive: false});
+	document.addEventListener('touchmove', function(){}, {passive: false});
+	</script>
+		<style>
+			html,body{
+				overscroll-behavior-y: contain;/*禁用下拉刷新*/
+				-webkit-user-select: none;/*禁用长按选择文本*/
+				-webkit-touch-callout: none;/*禁用长按弹出上下文菜单*/
+				-webkit-tap-highlight-color: transparent;/*禁用按钮/链接点击特效*/
+			}
+			input{vertical-align: middle;}
+			#pet{background:#fca;}
+			#res_choice .nomatch{background: #f99;}
+			#res_choice div{background: #ada;}
+			#tip .item{opacity: 1;width:calc(20% - 4px);}
+			.item{opacity: 0.2;position: relative;display: inline-block;font-size: 12px;width:calc(14% - 4px);margin:2px;vertical-align: middle;text-align: center;white-space: initial;}
+			.item:first-child{}.item:last-child{}
+			.item img{width:100%;vertical-align: middle;}
+			.item span{text-align: center;width:100%;vertical-align: middle;display: inline-block;}
+			.item input[type="checkbox"]{vertical-align: middle;}
+			#pet input[type="checkbox"]{position: absolute;right: 0;}
+			#pet span{position: absolute;bottom: 0;left: 0;background: rgba(255, 255, 255, 0.7);;}
+			.item input[type="checkbox"]:checked{display:inline-block;}
+			.undefined,.onlyone .two,.onlyone .thr{display:none;}
+			.one #pet{color:black;}.two #pet{color:#0af;}.thr #pet{color:red;}
+		</style>
+	</head>
+	<body style="">
+	<div style="padding: 3px;background: #D8D8D8;border: 2px solid #ddd;border-radius: 4px;height: calc(100% - 10px);" class="search">
+		<div id="closetip" style="text-align: center;width: 100%;height: 100%;margin: 0;position: fixed;background: #aa9;top: 0;left: 0;display: none;z-index: 10;">
+			<div id="tip" style="width:calc(100% - 20px);position: relative;top:calc(50% - 190px);left: 0;background: white;padding: 10px;"></div>
+		</div>
+	
+		<div style="">
+			<input id="update" type="button" style="width: 18%;text-align: center;color: blue;height: 25px;" value="更新" ><input id="msg" type="text" style="width: 64%;text-align: center;color: blue;background: #b3b3b3;border: none;padding: 2px 0;height: 25px;" value="消息区域" disabled=""><input id="setting" type="button" style="width: 18%;text-align: center;color: blue;height: 25px;" value="选项" >
+		</div>
+		<div id="result" style="overflow-y: scroll;height:calc(100% - 28px);">
+			<div id="res_nomatch" style="width: 100%;margin: 0;background: #f99;"></div>
+			<div id="res_choice" style="width: 100%;margin: 0;"></div>
+			<div id="res_nochoice" style="width: 100%;margin: 0;">列表区域</div>
+		</div>
+	</div>
+	
+</body></html>
