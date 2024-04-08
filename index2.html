@@ -6,6 +6,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8; X-Wap-Proxy-Cookie=none">
 	<link rel="Shortcut Icon" href="https://gw.alicdn.com/imgextra/i3/O1CN01wXAetk1tWNBC7bwRR_!!6000000005909-2-tps-120-120.png"/>
     <link href="https://gw.alicdn.com/imgextra/i3/O1CN01wXAetk1tWNBC7bwRR_!!6000000005909-2-tps-120-120.png" rel="apple-touch-icon-precomposed">
+
     <link href="https://gw.alicdn.com/imgextra/i3/O1CN01wXAetk1tWNBC7bwRR_!!6000000005909-2-tps-120-120.png" sizes="114x114" rel="apple-touch-icon-precomposed">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<meta name="apple-mobile-web-app-capable" content="yes">
@@ -67,7 +68,16 @@
 				case "screenshot":
 					try{a=e.getAttribute("data")}catch(s){}
 					history.pushState("text",null,location.href);
-					Cut(a);
+					if(window.icon){
+						Cut(a);
+					}else{
+						Msg("加载图片资源！");
+						load("icon.txt",function(){
+							Cut(a);
+						},function(){
+							Msg("图片资源加载错误！");
+						});
+					}
 					break;
 				case "Load":
 					break;
@@ -233,13 +243,13 @@
 	}
 	function Init(){
 		var a,b={"pet":{
-		"2061": {
-			"new": "1"
-		},"1056": {
+		"1056": {
 			"new": "1"
 		},"1057": {
 			"new": "1"
 		},"1058": {
+			"new": "1"
+		},"2061": {
 			"new": "1"
 		},"2058": {
 			"new": "",
@@ -314,7 +324,6 @@
 		(document.head?document.head:document.documentElement).appendChild(a);
 	};
 	function Loading(){
-		load("icon.txt",function(){
 		load("info.txt",function(){
 			load("data.txt",function(i,j,k,t){
 				if(!data||!data.list) return Msg("数据错误！");
@@ -334,9 +343,12 @@
 		},function(){
 			Msg("毛孩数据错误！");
 		});
+		/*
+		load("icon.txt",function(){
 		},function(){
 			Msg("毛孩数据错误！");
 		});
+		*/
 		var a=getQuery("sort",""),b=document.querySelector(".normal");
 		if(a==1&&b)b.setAttribute("class","office");
 	}
@@ -451,5 +463,5 @@
 	</div>
 	</div>
 	</div>
-	
+	<script type="text/javascript">load("icon.txt");</script>
 </body></html>
