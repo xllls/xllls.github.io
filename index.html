@@ -1,4 +1,3 @@
-
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-cn"><head>
     <style>
     body{margin: 2px;}
@@ -6,13 +5,43 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8; X-Wap-Proxy-Cookie=none">
 	<link rel="Shortcut Icon" href="https://gw.alicdn.com/imgextra/i3/O1CN01wXAetk1tWNBC7bwRR_!!6000000005909-2-tps-120-120.png"/>
     <link href="https://gw.alicdn.com/imgextra/i3/O1CN01wXAetk1tWNBC7bwRR_!!6000000005909-2-tps-120-120.png" rel="apple-touch-icon-precomposed">
+
     <link href="https://gw.alicdn.com/imgextra/i3/O1CN01wXAetk1tWNBC7bwRR_!!6000000005909-2-tps-120-120.png" sizes="114x114" rel="apple-touch-icon-precomposed">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<title>旅舍小公举</title>
 	<script>
-	var img="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABZ0RVh0Q3JlYXRpb24gVGltZQAwNC8yOC8yM/7Zi8QAAAAfdEVYdFNvZnR3YXJlAE1hY3JvbWVkaWEgRmlyZXdvcmtzIDi1aNJ4AAAADUlEQVQImWP4//8/AwAI/AL+hc2rNAAAAABJRU5ErkJggg=="
+	var tmp={
+		"new":{"1061":0,"1062":0,"2063":0,"1063":1,"2064":1,"2065":1},
+		"version":1714350122271||(new Date().getTime()),
+		"cur":JSON.parse(localStorage.getItem("llls_data"))
+	};
+	window.addEventListener("error",function(e){
+		if(e.target.TagName =="IMG" || e instanceof Event){
+			console.log(e);
+			if(confirm("检测到页面错误，\n可能是数据未更新造成的，\n是否立刻更新数据！\n如果多次出现或者更新后依然出现此类提示请联系管理员！")){
+				update(function(){
+					location.reload()
+				});
+			}
+		}
+	},true)
+//	var img="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABZ0RVh0Q3JlYXRpb24gVGltZQAwNC8yOC8yM/7Zi8QAAAAfdEVYdFNvZnR3YXJlAE1hY3JvbWVkaWEgRmlyZXdvcmtzIDi1aNJ4AAAADUlEQVQImWP4//8/AwAI/AL+hc2rNAAAAABJRU5ErkJggg=="
 	function $(obj){return document.getElementById(obj);}
+	function update(f){
+		delete window.icon;delete window.info;
+		load("info.txt",function(){
+			load("icon.txt",function(d){
+				if(!window.icon||!window.info) return Msg("数据错误！");
+				localStorage.setItem("llls_data",JSON.stringify({icon:window.icon,info:window.info,version:(new Date().getTime())}));
+				if(typeof f=="function") f();
+			},function(){
+				Msg("图片数据错误！");
+			});
+		},function(){
+			Msg("毛孩数据错误！");
+		});
+	}
 	function Msg(d){
 		var t=$("msg").value;
 		if(t.indexOf(d)==0) d=t+"！";
@@ -67,7 +96,16 @@
 				case "screenshot":
 					try{a=e.getAttribute("data")}catch(s){}
 					history.pushState("text",null,location.href);
-					Cut(a);
+					if(window.icon){
+						Cut(a);
+					}else{
+						Msg("加载图片资源！");
+						load("icon.txt",function(){
+							Cut(a);
+						},function(){
+							Msg("图片资源加载错误！");
+						});
+					}
 					break;
 				case "Load":
 					break;
@@ -212,8 +250,8 @@
 					t.setAttribute("id","pet");
 					t.setAttribute("data",c[b]);
 					t.setAttribute("class","item");
-					t.innerHTML='<img id="peticon" src="https://gw.alicdn.com/imgextra/'+i.icon+'"><div class="'+(i.new?"new":({"1":"one","2":"two","3":"thr","undefined":"one"})[data.level[c[b]]])+'"></div><span id="pettxt" class="line">'+i.name+'('+data.pet[c[b]].length+')</span>';
-					$(s.type=="friend"?"res":(i.new?"new":(a==1&&i.state?i.state:"res"))).appendChild(t);
+					t.innerHTML='<img id="peticon" src="https://gw.alicdn.com/imgextra/'+i.icon+'"><div class="'+(tmp.new[c[b]]?"new":({"1":"one","2":"two","3":"thr","undefined":"one"})[data.level[c[b]]])+'"></div><span id="pettxt" class="line">'+i.name+'('+data.pet[c[b]].length+')</span>';
+					$(s.type=="friend"?"res":(tmp.new[c[b]]?"new":(a==1&&i.state?i.state:"res"))).appendChild(t);
 					
 				}
 				a=(new Date()).getTime()-data.time;
@@ -232,40 +270,7 @@
         return null != n ? decodeURIComponent(n[2]) : (d?d:null)
 	}
 	function Init(){
-		var a,b={"pet":{
-		"2061": {
-			"new": "1"
-		},"1056": {
-			"new": "1"
-		},"1057": {
-			"new": "1"
-		},"1058": {
-			"new": "1"
-		},"2058": {
-			"new": "",
-			"name": "披风",
-			"icon": "i2/O1CN01PfDl3t1hXUr38j9JY_!!6000000004287-2-tps-202-202.png"
-		},"2059": {
-			"new": "",
-			"name": "小黄狗",
-			"icon": "i1/O1CN01eHxR4D1dbq9OmQitB_!!6000000003755-2-tps-202-202.png"
-		},"2060": {
-			"new": "",
-			"name": "毛十八",
-			"icon": "i2/O1CN010fITxT1uPKntYV92e_!!6000000006029-2-tps-202-202.png"
-		},"2055": {
-			"new": "",
-			"name": "荷叶",
-			"icon": "i2/O1CN013VWhIy1jaMYUbLxOU_!!6000000004564-2-tps-202-202.png"
-		},"2056": {
-			"new": "",
-			"name": "小丫",
-			"icon": "i1/O1CN01nYDDpi2803YQlFlCA_!!6000000007869-2-tps-202-202.png"
-		},"2057": {
-			"new": "",
-			"name": "星星",
-			"icon": "i4/O1CN01cKEc3r1Cwujpn9ooU_!!6000000000146-2-tps-202-202.png"
-		}}};
+		var a,b;
 		window.info=extend(window.info,b);
 		document.querySelector('.search').addEventListener("click",Bind);
 		document.querySelector('#word').addEventListener("keydown",function(e){if(e.keyCode==13)search()});
@@ -314,8 +319,9 @@
 		(document.head?document.head:document.documentElement).appendChild(a);
 	};
 	function Loading(){
-		load("icon.txt",function(){
-		load("info.txt",function(){
+		if(tmp.cur&&tmp.cur.version&&tmp.cur.version>tmp.version){
+			window.icon=tmp.cur.icon;
+			window.info=tmp.cur.info;
 			load("data.txt",function(i,j,k,t){
 				if(!data||!data.list) return Msg("数据错误！");
 				data.pet={};
@@ -331,12 +337,25 @@
 			},function(){
 				Msg("用户数据错误！");
 			});
-		},function(){
-			Msg("毛孩数据错误！");
-		});
-		},function(){
-			Msg("毛孩数据错误！");
-		});
+		}else{
+			update(function(){
+				load("data.txt",function(i,j,k,t){
+					if(!data||!data.list) return Msg("数据错误！");
+					data.pet={};
+					for(i=0;i<data.list.length;i++){
+						for(j=0;j<data.list[i].animal.length;j++){
+							t=data.list[i].animal[j];
+							if(!t[0]) continue;
+							if(!data.pet[t[0]])data.pet[t[0]]=[];
+							data.pet[t[0]].unshift(i);
+						}
+					}
+					Init();
+				},function(){
+					Msg("用户数据错误！");
+				});
+			});
+		}
 		var a=getQuery("sort",""),b=document.querySelector(".normal");
 		if(a==1&&b)b.setAttribute("class","office");
 	}
@@ -355,7 +374,7 @@
 						><img id="mapbg3" src="https://gw.alicdn.com/imgextra/i1/O1CN015O6JlE1C5KJIrDB5a_!!6000000000029-0-tps-750-812.jpg"
 					></div>
 					<div id="mapother" style="position: absolute;top: 0;left: 0;width: 100%;height: 100%;"
-						><table unselectable="on" style="width: 36%;font-size:2.5vw;background: #f3f3f3;border-radius: 8px;border: 1px solid;margin: 92% 33%;"><tbody><tr><td rowspan="3" style="width: 25%;" align="center"><img id="maphead" src="" style="border-radius: 4px;width: 100%;"></td><td id="mapusername" style="width:75%;font-weight:bold;"></td></tr><tr><td id="mapdonate" style="font-weight:bold;"></td></tr><tr><td id="mapcan"></td></tr></tbody></table
+						><table unselectable="on" style="width: 36%;font-size:2.5vw;background: #f3f3f3;border-radius: 8px;border: 1px solid;margin: 92% 33%;"><tbody><tr><td rowspan="3" style="width: 25%;" align="center"><img id="maphead" src="mmexport1680932165082.png" style="border-radius: 4px;width: 100%;"></td><td id="mapusername" style="width:75%;font-weight:bold;"></td></tr><tr><td id="mapdonate" style="font-weight:bold;"></td></tr><tr><td id="mapcan"></td></tr></tbody></table
 						><img id="mapmail" src="https://gw.alicdn.com/imgextra/i3/O1CN01HXm83t23BtZPZ4AaB_!!6000000007218-2-tps-240-238.png" alt="信箱" style="width: 13%;position: absolute;top: 36.5%;left: 70%;margin: -6.5%;"
 						><img id="mapbowl" src="https://gw.alicdn.com/imgextra/i4/O1CN012btzcs1XASYTA5NmA_!!6000000002883-2-tps-199-146.png" alt="饭盒" style="width: 13%;position: absolute;top: 83%;left: 60%;margin: -6.5%;"
 						><img id="mapmail" src="https://gw.alicdn.com/imgextra/i1/O1CN01lopL1V1GX2grTkNlT_!!6000000000631-2-tps-223-223.png" alt="爱心小铺" style="width: 14.6%;position: absolute;left: 30.7%;margin: -7.3%;top: 35.2%;"
@@ -451,5 +470,4 @@
 	</div>
 	</div>
 	</div>
-	
 </body></html>
