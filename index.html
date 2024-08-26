@@ -12,10 +12,11 @@
 	<title>旅舍小公举</title>
 	<script>
 	var tmp={
-		"new":{"1061":0,"1062":0,"2063":0,"1063":1,"2064":1,"2065":1},
-		"version":1714350122271||(new Date().getTime()),
+		"new":{"1064":0,"1065":0,"1066":1,"2066":0,"2067":0,"2068":0,"2069":0,"2070":1},
+		"version":1724002022288||(new Date().getTime()),
 		"cur":JSON.parse(localStorage.getItem("llls_data"))
 	};
+	/*
 	window.addEventListener("error",function(e){
 		if(e.target.TagName =="IMG" || e instanceof Event){
 			console.log(e);
@@ -26,6 +27,7 @@
 			}
 		}
 	},true)
+	*/
 //	var img="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAABZ0RVh0Q3JlYXRpb24gVGltZQAwNC8yOC8yM/7Zi8QAAAAfdEVYdFNvZnR3YXJlAE1hY3JvbWVkaWEgRmlyZXdvcmtzIDi1aNJ4AAAADUlEQVQImWP4//8/AwAI/AL+hc2rNAAAAABJRU5ErkJggg=="
 	function $(obj){return document.getElementById(obj);}
 	function update(f){
@@ -162,7 +164,11 @@
 		c=[];
 		switch(s.type){
 			case "search":
-				for(a in data.pet)if(info.pet[a]&&info.pet[a].name.indexOf(s.value)>=0)c.push(a);
+				for(a in data.pet){
+					if(!info.pet[a]&&icon.pet[a]){info.pet[a]={name:icon.pet[a],icon:(a>2000?"https://gw.alicdn.com/imgextra/i2/O1CN019iZ7B41n0sFZ99KnS_!!6000000005028-2-tps-202-202.png":"https://gw.alicdn.com/imgextra/i4/O1CN01RMqfAo1ruWohs7ans_!!6000000005691-2-tps-202-202.png")};}
+					if(info.pet[a]&&info.pet[a].name.indexOf(s.value)>=0)c.push(a);
+				}
+                //if(info.pet[a]&&info.pet[a].name.indexOf(s.value)>=0)c.push(a);
 				break;
 			case "level":
 				for(a in data.level)if(data.level[a]==s.value)c.push(a);
