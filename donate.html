@@ -1,0 +1,112 @@
+﻿<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes">
+<link rel="Shortcut Icon" href="https://gw.alicdn.com/tfs/TB1p.BGQXXXXXbFXFXXXXXXXXXX-160-160.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="keywords" content="CSS，时钟">
+<meta name="description" content="CSS3制作数字时钟">
+<title>捐爱心攻略</title>
+<script type="text/javascript">
+(function(){
+	function $(obj,b){b=document.querySelector(obj);if(!b){b=document.createElement("noscript");b.nofind=1}return b;}
+	function getQuery(s,d){
+		var t = new RegExp("(^|&)" + s + "=([^&]*)(&|$)","i")
+		, n = window.location.search.substr(1).match(t);
+		return null != n ? decodeURIComponent(n[2]) : (d===undefined?null:d)
+	}
+	function Init(){
+		data={
+			level:[0,30,110,270,520,890,1410,2210,3290,4650,6290,8210,10410,12890,15650,18780,22280,26150,30580,35570,41120,47230,54740,65050,79560,99670,126780,160890,202000,250110,1000000250110,1000000260110,1000000270110,1000000280110,1000000290110,1000000300110,1000000310110,1000000320110,1000000330110,1000000340110,1000000350110,1000000360110,1000000370110,1000000380110,1000000390110,1000000400110,1000000410110,1000000420110,1000000430110,1000000440110,1000000450110,1000000460110,1000000470110,1000000480110,1000000490110,1000000500110],
+			index:0
+		}
+		$("#submit").addEventListener("submit",function(e,a,b,c,d){
+			e.preventDefault();
+			a=parseInt($("#heart").value);
+			c=0;d={level:0,need:0,first:0,firstexp:0,next:0,nextexp:0,more:0,res:""};
+			if(a>0){
+				for(b=0;b<data.level.length;b++){
+					if(data.level[b]>a){data.index=b;c=data.level[b-1];break;}
+				}
+			}
+			if(c){
+				b=data.level[data.index]-c;
+				d.level=data.index;
+				d.need=(b>10000?(c+10000):data.level[data.index])-a;
+				if(d.need>0){
+					if(b>10000){
+						d.first=Math.floor((d.need-1)/300)*300;
+						d.firstexp="("+(a+d.first)+"/"+data.level[data.index]+")";
+						d.next=300;
+						d.nextexp="("+(data.level[data.index]+d.first+d.next-d.need)+"/"+(data.level[data.index+1]?data.level[data.index+1]:(data.level[data.index]+10000))+")";
+						d.more=b-10000;
+						d.more=(data.level[data.index]+d.first+d.next-d.need)+"-"+a+"-"+(d.first+d.next)+"="+(b-10000);
+					}
+					d.res=	"输入的经验值："+a+
+						  "\n等级："+d.level+
+						  "，升级所需经验："+d.need+(d.more?(
+						  "\n建议："+
+						  "\n先捐："+d.first+"爱心："+d.firstexp+
+						  "\n再捐："+d.next+"爱心："+d.nextexp+
+						  "\n额外增加经验为："+d.more):"\n本次升级无额外经验！");
+					$("#show").value=d.res;
+				}else{
+					$("#show").value="错误2："+d.need;
+				}
+			}else{
+				$("#show").value="错误1："+a;
+			}
+			/*
+			输入的经验值：
+			当前等级：
+			升级所需经验：
+			>10000
+			先捐3000爱心，经验条为：
+			再捐3000爱心，经验条为：
+			额外经验为：
+			*/
+		});
+	}
+	document.addEventListener("DOMContentLoaded",Init);
+})()
+</script>
+<style>
+.hide{
+	display:none;
+	position: fixed;
+	top: -100%;
+	left: -100%;
+	opacity: 0;
+	visibility: hidden;
+}
+body{
+	margin: 0;
+	height:100%;
+	width:100%;
+}
+textarea,input{
+	margin: 0;padding: 0;height: 8vw;border: 0;font-size:4vw;
+	vertical-align: top;border-style: outset;outline: none;
+}
+#bg{
+	display: flex;
+    justify-content: center;
+}
+#bg>div{
+	margin: auto;
+	background:gray;
+	padding: 4px;
+    border-radius: 8px;
+}
+#bg div{
+	border: 1px solid;
+}
+</style>
+</head>
+<body id="bg">
+
+<div>
+	<form id="submit"><input id="heart" type="text" style="width: 70%;padding:0 1vw;text-align: center;color: blue;" value="" placeholder="～输入当前荣誉值～" onfocus="this.select()"><input type="submit" value="查询" style="width: 30%;"></form>
+	<div><textarea id="show" cols="40" rows="8" style="width: 100%; resize: none;height: auto;"></textarea></div>
+</div>
+
+</body></html>

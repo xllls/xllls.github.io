@@ -1,0 +1,203 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-cn"><head>
+    <style>
+    body{margin: 2px;}
+	</style>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8; X-Wap-Proxy-Cookie=none">
+	<link rel="Shortcut Icon" href="https://gw.alicdn.com/imgextra/i1/O1CN01lRRgxQ1Fv1hEVknnW_!!6000000000548-2-tps-170-170.png"/>
+	<link rel="Bookmark" href="https://gw.alicdn.com/imgextra/i1/O1CN01lRRgxQ1Fv1hEVknnW_!!6000000000548-2-tps-170-170.png"/>
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<title>旅舍小公举</title>
+	<script>
+	function $(obj,b){b=document.querySelector(obj);if(!b){b=document.createElement("noscript");b.nofind=1}return b;}
+	function Msg(d){
+		return console.log(d);
+		var t=$("#msg").value;
+		if(t.indexOf(d)==0) d=t+"！";
+		$("#msg").value=d;
+	}
+	function Bind(e){
+		var a,b,c,d,t,i,j,k;
+		if(e&&e.target){
+			e=e.target;
+			switch(e.id){
+				case "petcheck":
+					try{
+						b=e.parentNode.parentNode.id;
+						d=parseInt(e.getAttribute("data"));
+					}catch(s){d=0}
+					if(b&&d){
+						switch(b){
+							case "targ":
+								data[title].done.push(d);
+								c=data[title].target.indexOf(d);
+								if(c>-1){data[title].target.splice(c,1)}
+								
+								console.log(b);
+								c=$("#targ>#pet[data=\""+d+"\"]");
+								if(!c.nofind)$("#done").appendChild(c);
+								e.checked=true;
+								break;
+							case "other":
+								data[title].target.push(d);
+								
+								console.log(b);
+								e.parentNode.classList.add("hide");
+								e.checked=false;
+								t=info.pet[d];
+								a=document.createElement('label');
+								a.setAttribute("id","pet");
+								a.setAttribute("data",t.spineId);
+								a.setAttribute("class","item");
+								a.innerHTML='<img id="peticon" src="https://gw.alicdn.com/imgextra/'+t.icon+'" crossOrigin="anonymous"><input data="'+t.spineId+'" type="checkbox" checked="checked" id="petcheck"><span id="pettext" class="line">'+t.name+'</span>';
+								$("#targ").appendChild(a);
+								break;
+							case "done":
+								c=data[title].done.indexOf(d);
+								if(c>-1){data[title].done.splice(c,1)}
+								
+								console.log(b);
+								c=$("#done>#pet[data=\""+d+"\"]");
+								if(!c.nofind)c.parentNode.removeChild(c);
+								c=$("#other>#pet[data=\""+d+"\"]");
+								if(!c.nofind)c.classList.remove("hide");
+								break;
+							case "Load":
+								break;
+							default:console.log(e);
+								break;
+						}
+						localStorage.setItem("AnimalLogData",JSON.stringify(data))
+					}
+					break;
+				case "Load":
+					break;
+				case "submit":
+					break;
+				case "Load":
+					break;
+				case "Load":
+					break;
+				default:console.log(e);
+					break;
+			}
+		}
+	}
+	function getQuery(s,d){
+		var t = new RegExp("(^|&)" + s + "=([^&]*)(&|$)","i")
+        , n = window.location.search.substr(1).match(t);
+        return null != n ? decodeURIComponent(n[2]) : (d?d:null)
+	}
+	function GetJS(u,suc,err){
+        var t=document.createElement('script');
+        t.setAttribute("src",u);
+        t.addEventListener("load",function(e){
+        	if(typeof suc == 'function')suc();
+        	e.target.parentElement.removeChild(e.target);
+        });
+        t.addEventListener("error",function(e){
+        	if(typeof err == 'function')err();
+        	e.target.parentElement.removeChild(e.target);
+        });
+        document.head.appendChild(t);
+	}
+	function Init(a,b,c,t){
+		document.querySelector('.search').addEventListener("click",Bind);
+		c=$("#title");
+		for(a in window.data){
+			if(a=="default")continue;
+			b=document.createElement('option');
+			b.setAttribute("value",a);
+			b.innerText=a;
+			c.appendChild(b);
+		}
+		c.value=title;
+		c.addEventListener("change",
+				function(e) {
+					e = e.target.value;
+					if (e == "delete") {
+						delete data[title];
+						location.search = "?title=default";
+						localStorage.setItem("AnimalLogData",JSON.stringify(data))
+					} else {
+						location.search = "?title=" + encodeURI(e)
+					}
+				});
+		c=$("#other");
+		for(a in info.pet){
+			b=document.createElement('label');
+			b.setAttribute("id","pet");
+			b.setAttribute("data",a);
+			b.setAttribute("class","item");
+			b.innerHTML='<img id="peticon" src="https://gw.alicdn.com/imgextra/'+info.pet[a].icon+'" crossOrigin="anonymous"><input data="'+info.pet[a].spineId+'" type="checkbox" id="petcheck"><span id="pettext" class="line">'+info.pet[a].name+'</span>';
+			c.appendChild(b);
+		}
+		c=$("#targ");
+		for(a=0;a<data[title].target.length;a++){
+			t=info.pet[data[title].target[a]];
+			b=$("#other>#pet[data=\""+t.spineId+"\"]");
+			if(!b.nofind)b.classList.add("hide");
+			b=document.createElement('label');
+			b.setAttribute("id","pet");
+			b.setAttribute("data",t.spineId);
+			b.setAttribute("class","item");
+			b.innerHTML='<img id="peticon" src="https://gw.alicdn.com/imgextra/'+t.icon+'" crossOrigin="anonymous"><input data="'+t.spineId+'" type="checkbox" checked="checked" id="petcheck"><span id="pettext" class="line">'+t.name+'</span>';
+			c.appendChild(b);
+		}
+		c=$("#done");
+		for(a=0;a<data[title].done.length;a++){
+			t=info.pet[data[title].done[a]];
+			b=$("#other>#pet[data=\""+t.spineId+"\"]");
+			if(!b.nofind)b.classList.add("hide");
+			b=document.createElement('label');
+			b.setAttribute("id","pet");
+			b.setAttribute("data",t.spineId);
+			b.setAttribute("class","item");
+			b.innerHTML='<img id="peticon" src="https://gw.alicdn.com/imgextra/'+t.icon+'" crossOrigin="anonymous"><input data="'+t.spineId+'" type="checkbox" checked="checked" id="petcheck"><span id="pettext" class="line">'+t.name+'</span>';
+			c.appendChild(b);
+		}
+	}
+	function Loading(){
+		window.data=JSON.parse(localStorage.getItem("AnimalLogData"));window.title=getQuery("title");
+		if(!window.data)window.data={};
+		if(!window.data[window.title])window.data[window.title]={"target":[],"done":[]};
+		if(!window.title)location.search = "?title=default";
+		GetJS("http://llls.000.pe/info.txt?t="+Math.floor((new Date().getTime())/1000),function(){
+			if(window.info&&window.info.pet){
+				Init();
+			}else{
+				Msg("旅舍数据获取失败！");
+			}
+		},function(){
+			Msg("旅舍数据获取失败！");
+		})
+	}
+	document.addEventListener("DOMContentLoaded",Loading);
+	</script>
+	<style>
+			div{
+				padding: 0;border: 0;margin: 0;
+			}
+			#res .item{width:calc(20% - 2px);overflow: hidden;min-height: 16vw;}
+			.item{margin: 1px;position: relative;font-size:3vw;text-align: center;display: inline-flex;align-items: center;justify-content: center;}
+			.item img{width:100%;vertical-align: middle;}
+			.item span{text-align: center;width:100%;vertical-align: middle;position: absolute;bottom: 0;left: 0;background: rgba(0 0 0 / 32%);color: #fff;text-shadow: 0 0 5px black;border-radius: 5px;}
+			.item input[type="checkbox" i]{position: absolute;top: 0;left:0;margin: 0 auto;width: 100%;z-index: 2;}
+			.hide{/*display:none;visibility: hidden;*/z-index:-10;position: fixed;top: 999vh;left: 999vw;opacity: 0;}
+		</style>
+	</head>
+	<body style="">
+	<div style="padding: 3px;background: #FCEEE3;border: 2px solid #ddd;border-radius: 4px;min-height: calc(100% - 10px);/**/" class="search">
+	<div style=""><!--
+		--><select id="title" style="margin: 0;outline: none;background: none;border: none;-webkit-appearance: none;font:12vw/14vw serif;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;vertical-align: middle;padding: 4px 0;color: #F09;text-align: justify;text-align-last: center;-moz-text-align-last:center;width: 100%;"><option value="delete">删除当前数据</option><option value="default">默认记录</option></select><!--
+	--></div>
+	<div id="res" style=""><!--
+		--><div style="text-align: center;background: #eee;">目标</div><!--
+		--><div id="targ" style="min-height: 20vw;"></div><!--
+		--><div style="text-align: center;background: #eee;">已完成</div><!--
+		--><div id="done" style="min-height: 20vw;"></div><!--
+		--><div style="text-align: center;background: #eee;">可选</div><!--
+		--><div id="other" style="min-height: 20vw;"></div><!--
+	--></div>
+	</div>
+</body></html>
